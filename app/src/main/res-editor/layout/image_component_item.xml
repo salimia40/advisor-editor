@@ -7,13 +7,14 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:background="#096093"
+        android:background="#EEFFFF"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+    android:src="@drawable/image"/>
 
     <EditText
         android:id="@+id/captionEt"
@@ -29,16 +30,16 @@
         android:layout_height="wrap_content"
         android:hint="Caption(Optional)" />
 
-    <ImageView
+    <TextView
         android:id="@+id/removeImageButton"
-        android:src="@drawable/remove_image_icon"
-        android:text="Remove"
+        android:text="X"
+        android:textSize="18sp"
+        android:gravity="center"
         android:visibility="visible"
         android:layout_margin="8dp"
         android:layout_alignParentRight="true"
         android:background="@drawable/remove_image_button_bg"
         android:textColor="#ffffff"
-        android:padding="8dp"
         android:layout_width="36dp"
         android:layout_height="36dp" />
 

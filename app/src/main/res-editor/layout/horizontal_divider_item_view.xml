@@ -9,8 +9,10 @@
     android:orientation="vertical">
 
     <View
-        android:background="#e6e6e6"
+        android:background="@drawable/linecolor"
         android:layout_width="wrap_content"
         android:layout_height="1dp" />
+
+
 
 </LinearLayout>

@@ -22,7 +22,7 @@
         android:background="@drawable/blockquote_component_bg"
         android:id="@+id/inputBox"
         android:textSize="16sp"
-        android:textColorHint="#cacaca"
+        android:textColorHint="#EEFFFF"
         android:paddingLeft="4dp"
         android:paddingTop="16dp"
         android:layout_width="match_parent"

@@ -1,147 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@drawable/editor_control_bg"
-    android:orientation="horizontal">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/editor_control_bg">
 
     <FrameLayout
-        android:id="@+id/container1"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        >
+            android:id="@+id/container1"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/normalTextBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:fontFamily="serif-monospace"
-            android:gravity="center"
-            android:text="T"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+                android:id="@+id/normalTextBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:fontFamily="serif-monospace"
+                android:gravity="center"
+                android:text="T"
+                android:textColor="@color/border_editor_control"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
 
     </FrameLayout>
 
     <RelativeLayout
-        android:id="@+id/container2"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/container1">
-
-        <TextView
-            android:id="@+id/headingBtn"
-            android:gravity="center"
-            android:layout_width="match_parent"
+            android:id="@+id/container2"
+            android:layout_width="44dp"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:fontFamily="serif-monospace"
-            android:text="H"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:layout_toRightOf="@id/guideline3" app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@id/guideline3"
+    >
 
         <TextView
-            android:id="@+id/headingNumberBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-2dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:fontFamily="serif-monospace"
-            android:text="1"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="8dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+                android:id="@+id/headingBtn"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:fontFamily="serif-monospace"
+                android:text="H"
+                android:textColor="@color/border_editor_control"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/headingNumberBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-2dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:fontFamily="serif-monospace"
+                android:text="1"
+                android:textColor="@color/border_editor_control"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
 
     </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/container3"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/container2">
+            android:id="@+id/container3"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/guideline4" app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline4">
 
         <ImageView
-            android:background="?selectableItemBackgroundBorderless"
-            android:id="@+id/bulletBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:padding="10dp"
-            android:src="@drawable/ul" />
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/bulletBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/ul"/>
 
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/container4"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/container3">
+            android:id="@+id/container4"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/guideline5" app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline5">
 
         <ImageView
-            android:background="?selectableItemBackgroundBorderless"
-            android:id="@+id/blockQuoteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:padding="10dp"
-            android:src="@drawable/quote" />
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/blockQuoteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/quote"/>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/container5"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/container4">
+            android:id="@+id/container5"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/guideline6" app:layout_constraintEnd_toStartOf="@+id/guideline7"
+            app:layout_constraintStart_toEndOf="@id/guideline6"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:background="?selectableItemBackgroundBorderless"
-            android:id="@+id/linkBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:padding="10dp"
-            android:src="@drawable/link" />
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/linkBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/link"/>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/container6"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/container5">
+            android:id="@+id/container6"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/guideline7"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline7">
 
         <ImageView
-            android:background="?selectableItemBackgroundBorderless"
-            android:id="@+id/hrBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:padding="10dp"
-            android:src="@drawable/hr" />
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/hrBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/line"/>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/container7"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true">
+            android:id="@+id/container7"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:background="?selectableItemBackgroundBorderless"
-            android:id="@+id/imageBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:padding="10dp"
-            android:src="@drawable/image" />
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/imageBtn"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:padding="10dp"
+                android:src="@drawable/image"/>
 
     </FrameLayout>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.88"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline2"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.72"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline3"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.124087594"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline4"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.24087591"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline5"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.3625304"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline6"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.48175183"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline7"
+                                                android:orientation="vertical"
+                                                app:layout_constraintGuide_percent="0.6034063"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
