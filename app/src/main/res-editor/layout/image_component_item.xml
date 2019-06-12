@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="#009988"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:background="#096093"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
+
+    <EditText
+        android:id="@+id/captionEt"
+        android:padding="8dp"
+        android:layout_below="@+id/imageView"
+        android:background="@drawable/text_input_bg"
+        android:gravity="center_horizontal"
+        android:textSize="14sp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Caption(Optional)" />
+
+    <ImageView
+        android:id="@+id/removeImageButton"
+        android:src="@drawable/remove_image_icon"
+        android:text="Remove"
+        android:visibility="visible"
+        android:layout_margin="8dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/remove_image_button_bg"
+        android:textColor="#ffffff"
+        android:padding="8dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/imageUploadProgressBar"
+        android:background="@drawable/image_uploading_progress_bar"
+        android:layout_centerInParent="true"
+        android:layout_width="48dp"
+        android:padding="4dp"
+        android:layout_height="48dp" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/retryUpload"
+        android:src="@drawable/retry_image_upload"
+        android:layout_centerInParent="true"
+        android:padding="8dp"
+        android:clickable="true"
+        android:background="@drawable/image_uploading_progress_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+
+    <TextView
+        android:id="@+id/statusMessage"
+        android:visibility="gone"
+        android:layout_margin="4dp"
+        android:background="@drawable/failed_image_upload_message"
+        android:textColor="#202020"
+        android:padding="8dp"
+        android:text="Failed to upload image."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/indicatorTv"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text="1"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
+
+    <EditText
+        android:background="@drawable/blockquote_component_bg"
+        android:id="@+id/inputBox"
+        android:textSize="16sp"
+        android:textColorHint="#cacaca"
+        android:paddingLeft="4dp"
+        android:paddingTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

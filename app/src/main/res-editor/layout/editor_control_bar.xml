@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@drawable/editor_control_bg"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/container1"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/normalTextBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:text="T"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/container2"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/container1">
+
+        <TextView
+            android:id="@+id/headingBtn"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:fontFamily="serif-monospace"
+            android:text="H"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/headingNumberBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-2dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:fontFamily="serif-monospace"
+            android:text="1"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/container3"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/container2">
+
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/bulletBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@drawable/ul" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/container4"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/container3">
+
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/blockQuoteBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@drawable/quote" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/container5"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/container4">
+
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/linkBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@drawable/link" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/container6"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/container5">
+
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/hrBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@drawable/hr" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/container7"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/imageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@drawable/image" />
+
+    </FrameLayout>
+
+</RelativeLayout>
