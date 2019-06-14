@@ -1,4 +1,4 @@
-package ir.puyaars.advisor.blog.editor.components
+package ir.puyaars.advisor.blog.editor.components.hr
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,12 +6,6 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import ir.puyaars.advisor.blog.R
 
-
-class HorizontalDividerComponent(private var context: Context) {
-
-    val newHorizontalComponentItem: HorizontalDividerComponentItem
-        get() = HorizontalDividerComponentItem(context)
-}
 
 class HorizontalDividerComponentItem : FrameLayout {
     constructor(context: Context) : super(context) {

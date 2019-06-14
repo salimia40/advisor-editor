@@ -8,7 +8,7 @@
 
     <TextView
         android:visibility="gone"
-        android:id="@+id/indicatorTv"
+        android:id="@+id/indicator"
         android:textColor="#000000"
         android:textSize="20sp"
         android:gravity="center"
@@ -20,9 +20,9 @@
 
     <EditText
         android:background="@drawable/blockquote_component_bg"
-        android:id="@+id/inputBox"
+        android:id="@+id/text"
         android:textSize="16sp"
-        android:textColorHint="#EEFFFF"
+        android:textColorHint="#cacaca"
         android:paddingLeft="4dp"
         android:paddingTop="16dp"
         android:layout_width="match_parent"

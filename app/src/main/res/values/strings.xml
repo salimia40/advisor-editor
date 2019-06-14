@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">blog</string>
+    <string name="uploading">Uploading…</string>
+    <string name="failedToUpload">Failed To Upload. Try again!</string>
 </resources>

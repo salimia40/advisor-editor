@@ -1,16 +1,16 @@
 package ir.puyaars.advisor.blog.editor.utils
 
 import android.content.Context
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem
+import ir.puyaars.advisor.blog.editor.components.text.TextComponentItem
 import ir.puyaars.advisor.blog.editor.models.BulletGroupModel
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_OL
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_OL
 
 
-open class Core(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+abstract class Core(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
     var bulletGroupModels: ArrayList<BulletGroupModel> = ArrayList()
 
     init {
@@ -111,4 +111,11 @@ open class Core(context: Context, attrs: AttributeSet?) : LinearLayout(context, 
             }
         }
     }
+
+    abstract fun setCurrentInputMode(currentInputMode: Int)
+    abstract fun setHeading(heading: Int)
+    abstract fun setFocus(view: View)
+    abstract fun addTextComponent(insertIndex: Int, content: String)
+    abstract fun insertImage(insertIndex: Int, filePath: String, uploaded: Boolean, caption: String)
+    abstract fun insertHorizontalDivider(insertNewTextComponentAfterThis: Boolean)
 }

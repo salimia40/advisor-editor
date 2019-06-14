@@ -38,6 +38,6 @@ fun getNewComponentTag(index: Int): ComponentTag {
     return componentTag
 }
 
-fun loadImage(imageView: ImageView, _uri: String) {
+fun loadImageIn(imageView: ImageView, _uri: String) {
     Picasso.get().load(_uri).into(imageView)
 }

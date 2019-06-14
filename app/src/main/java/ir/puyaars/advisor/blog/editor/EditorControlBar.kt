@@ -6,9 +6,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import ir.puyaars.advisor.blog.R
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_OL
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_PLAIN
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_UL
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_OL
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_PLAIN
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_UL
 import ir.puyaars.advisor.blog.editor.models.TextComponentStyle.BLOCKQUOTE
 import ir.puyaars.advisor.blog.editor.models.TextComponentStyle.H1
 import ir.puyaars.advisor.blog.editor.models.TextComponentStyle.H2

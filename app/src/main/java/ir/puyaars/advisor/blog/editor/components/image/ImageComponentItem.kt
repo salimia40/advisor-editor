@@ -1,4 +1,4 @@
-package ir.puyaars.advisor.blog.editor.components
+package ir.puyaars.advisor.blog.editor.components.image
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,30 +7,20 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
-import android.widget.*
+import android.widget.FrameLayout
 import ir.puyaars.advisor.blog.R
 import ir.puyaars.advisor.blog.editor.models.ComponentTag
 import ir.puyaars.advisor.blog.editor.models.ImageComponentModel
+import ir.puyaars.advisor.blog.editor.utils.UploadResListener
 import ir.puyaars.advisor.blog.editor.utils.Uploader
 import kotlinx.android.synthetic.main.image_component_item.view.*
 
+class ImageComponentItem : FrameLayout, UploadResListener {
 
-internal class ImageComponent(private val context: Context) {
+    private var isImageUploaded: Boolean = false
 
-    fun getNewImageComponentItem(imageRemoveListener: ImageComponentItem.ImageComponentListener): ImageComponentItem {
-        val imageComponentItem = ImageComponentItem(context)
-        imageComponentItem.setImageComponentListener(imageRemoveListener)
-        return imageComponentItem
-    }
-}
+    private var isImageUploading: Boolean = false
 
-class ImageComponentItem : FrameLayout {
-
-    var isImageUploaded: Boolean = false
-        private set
-    var isImageUploading: Boolean = false
-        private set
     private var downloadUrl: String? = null
     var caption: String? = null
         set(caption) {
@@ -114,7 +104,7 @@ class ImageComponentItem : FrameLayout {
             else
                 charSequence.subSequence(clen - 1, clen).toString()
             val noReadableCharactersAfterCursor = sequenceToCheckNewLineCharacter.trim { it <= ' ' }.isEmpty()
-            //if last characters are [AB\n<space>] or [AB\n] then we insert new TextComponent
+            //if last characters are [AB\n<space>] or [AB\n] then we insert new TextComponentProvider
             //else if last characters are [AB\nC] ignore the insert.
             if (sequenceToCheckNewLineCharacter.contains("\n") && noReadableCharactersAfterCursor) {
                 if (imageComponentListener != null) {
@@ -126,7 +116,7 @@ class ImageComponentItem : FrameLayout {
 
     private fun loadImage() {
         if (downloadUrl != null) {
-            ir.puyaars.advisor.blog.editor.utils.loadImage(imageView, downloadUrl!!)
+            ir.puyaars.advisor.blog.editor.utils.loadImageIn(imageView, downloadUrl!!)
         }
     }
 
@@ -145,16 +135,18 @@ class ImageComponentItem : FrameLayout {
         failedState()
     }
 
+    override fun onUpSuccess(url: String) {
+        onImageUploaded(url)
+    }
+
+    override fun onUpFail() {
+        onImageUploadFailed()
+    }
+
     private fun startImageUpload(filePath: String?) {
         isImageUploading = true
         uploadingState()
-        val upRes = Uploader.getInstance().uploadFile(filePath!!)
-        upRes.result.observeForever {
-            onImageUploaded(it)
-        }
-        upRes.error.observeForever {
-            onImageUploadFailed()
-        }
+        Uploader.getInstance().uploadFile(filePath!!, this)
     }
 
     @SuppressLint("SetTextI18n")
@@ -172,7 +164,7 @@ class ImageComponentItem : FrameLayout {
     private fun uploadingState() {
         retryUpload.visibility = View.GONE
         statusMessage.visibility = View.VISIBLE
-        statusMessage.text = "Uploading..."
+        statusMessage.text = context.getString(R.string.uploading)
         imageUploadProgressBar.visibility = View.VISIBLE
         removeImageButton.visibility = View.VISIBLE
         //remove listener
@@ -193,7 +185,7 @@ class ImageComponentItem : FrameLayout {
     private fun failedState() {
         retryUpload.visibility = View.VISIBLE
         statusMessage.visibility = View.VISIBLE
-        statusMessage.text = "Failed To Upload. Try again!"
+        statusMessage.text = context.getString(R.string.failedToUpload)
         imageUploadProgressBar.visibility = View.GONE
         removeImageButton.visibility = View.VISIBLE
         //remove listener

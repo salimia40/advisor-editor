@@ -3,6 +3,4 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="bg_editor_control">#3E006464</color>
-    <color name="border_editor_control">#006464</color>
 </resources>

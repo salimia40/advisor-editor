@@ -4,15 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import ir.puyaars.advisor.blog.editor.components.hr.HorizontalDividerComponentItem
 import ir.puyaars.advisor.blog.editor.models.DraftModel
 import ir.puyaars.advisor.blog.editor.models.ComponentTag
 import ir.puyaars.advisor.blog.editor.models.ImageComponentModel
 import ir.puyaars.advisor.blog.editor.models.TextComponentModel
-import ir.puyaars.advisor.blog.editor.components.*
-import ir.puyaars.advisor.blog.editor.components.TextComponent
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_OL
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_PLAIN
-import ir.puyaars.advisor.blog.editor.components.TextComponentItem.Companion.MODE_UL
+import ir.puyaars.advisor.blog.editor.components.hr.HorizontalDividerComponentProvider
+import ir.puyaars.advisor.blog.editor.components.text.TextComponentProvider
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_OL
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_PLAIN
+import ir.puyaars.advisor.blog.editor.components.text.TextCore.Companion.MODE_UL
+import ir.puyaars.advisor.blog.editor.components.image.ImageComponentProvider
+import ir.puyaars.advisor.blog.editor.components.image.ImageComponentItem
+import ir.puyaars.advisor.blog.editor.components.text.TextComponentItem
 import ir.puyaars.advisor.blog.editor.models.TextComponentStyle.BLOCKQUOTE
 import ir.puyaars.advisor.blog.editor.models.TextComponentStyle.NORMAL
 import ir.puyaars.advisor.blog.editor.utils.*
@@ -20,21 +24,23 @@ import kotlinx.android.synthetic.main.text_component_item.view.*
 
 
 class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
-    TextComponent.TextComponentCallback, ImageComponentItem.ImageComponentListener {
+    TextComponentProvider.TextComponentCallback, ImageComponentItem.ImageComponentListener {
     private var _activeView: View? = null
     private var mContext: Context? = null
-    private var draftManager: DraftManager? = null
-    private var __textComponent: TextComponent? = null
-    private var __imageComponent: ImageComponent? = null
-    private var __horizontalComponent: HorizontalDividerComponent? = null
+    private var draftManager: DraftManager? = DraftManager()
+    private var textComponentProvider: TextComponentProvider? =
+        TextComponentProvider(context, this)
+    private var imageComponentProvider: ImageComponentProvider? = ImageComponentProvider(context)
+    private var horizontalComponentProvider: HorizontalDividerComponentProvider? =
+        HorizontalDividerComponentProvider(context)
     private var currentInputMode: Int = 0
-    private var markDownConverter: MarkDownConverter? = null
-    private var renderingUtils: RenderingUtils? = null
+    private var renderer: Renderer = Renderer(this)
     private var editorFocusReporter: EditorFocusReporter? = null
     private var startHintText: String? = null
     private var defaultHeadingType = NORMAL
     private var isFreshEditor: Boolean = false
     private var oldDraft: DraftModel? = null
+
 
     /**
      * @return index next to focussed view.
@@ -61,13 +67,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
 
     init {
         this.mContext = context
-        draftManager = DraftManager()
-        bulletGroupModels = ArrayList()
-        markDownConverter = MarkDownConverter()
         currentInputMode = MODE_PLAIN
-        __textComponent = TextComponent(context, this)
-        __imageComponent = ImageComponent(context)
-        __horizontalComponent = HorizontalDividerComponent(context)
     }
 
     /**
@@ -100,12 +100,12 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
     }
 
     /**
-     * adds new TextComponent.
+     * adds new TextComponentProvider.
      *
      * @param insertIndex at which addition of new textcomponent take place.
      */
     private fun addTextComponent(insertIndex: Int) {
-        val textComponentItem = __textComponent!!.newTextComponent(currentInputMode)
+        val textComponentItem = textComponentProvider!!.newTextComponent(currentInputMode)
         //prepare tag
         val textComponentModel = TextComponentModel()
         if (insertIndex == 0) {
@@ -117,7 +117,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
         componentTag.baseComponent = textComponentModel
         textComponentItem.tag = componentTag
         addView(textComponentItem, insertIndex)
-        __textComponent!!.updateComponent(textComponentItem)
+        textComponentProvider!!.updateComponent(textComponentItem)
         setFocus(textComponentItem)
         reComputeTagsAfter(insertIndex)
         refreshViewOrder()
@@ -128,13 +128,13 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
      *
      * @param heading number to be set
      */
-    fun setHeading(heading: Int) {
+    override fun setHeading(heading: Int) {
         currentInputMode = MODE_PLAIN
         if (_activeView is TextComponentItem) {
             (_activeView as TextComponentItem).mode = currentInputMode
             val componentTag = _activeView!!.tag as ComponentTag
             (componentTag.baseComponent as TextComponentModel).headingStyle = heading
-            __textComponent!!.updateComponent(_activeView as TextComponentItem)
+            textComponentProvider!!.updateComponent(_activeView as TextComponentItem)
         }
         refreshViewOrder()
     }
@@ -142,10 +142,10 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
     /**
      * @param view to be focused on.
      */
-    private fun setFocus(view: View) {
+     override fun setFocus(view: View) {
         _activeView = view
         if (_activeView is TextComponentItem) {
-            currentInputMode = (_activeView as TextComponentItem).mode
+            currentInputMode = (_activeView as TextComponentItem).mode!!
             (view as TextComponentItem).inputBox.requestFocus()
             reportStylesOfFocusedView(view)
         }
@@ -157,12 +157,12 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
      * @param startIndex index after which re-computation will be done.
      */
     private fun reComputeTagsAfter(startIndex: Int) {
-        var _child: View
+        var child: View
         for (i in startIndex until childCount) {
-            _child = getChildAt(i)
-            val componentTag = _child.tag as ComponentTag
+            child = getChildAt(i)
+            val componentTag = child.tag as ComponentTag
             componentTag.componentIndex = i
-            _child.tag = componentTag
+            child.tag = componentTag
         }
     }
 
@@ -173,7 +173,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
      */
     private fun reportStylesOfFocusedView(view: TextComponentItem) {
         if (editorFocusReporter != null) {
-            editorFocusReporter!!.onFocusedViewHas(view.mode, view.textHeadingStyle)
+            editorFocusReporter!!.onFocusedViewHas(view.mode!!, view.textHeadingStyle)
         }
     }
 
@@ -182,9 +182,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
         val contents = draft.items
         if (contents != null) {
             if (contents.size > 0) {
-                renderingUtils = RenderingUtils()
-                renderingUtils!!.setEditor(this)
-                renderingUtils!!.render(contents)
+                renderer.render(contents)
             } else {
                 startFreshEditor()
             }
@@ -198,17 +196,17 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
      *
      * @param currentInputMode mode of insert.
      */
-    fun setCurrentInputMode(currentInputMode: Int) {
+    override fun setCurrentInputMode(currentInputMode: Int) {
         this.currentInputMode = currentInputMode
     }
 
     /**
-     * adds new TextComponent with pre-filled text.
+     * adds new TextComponentProvider with pre-filled text.
      *
      * @param insertIndex at which addition of new textcomponent take place.
      */
-    fun addTextComponent(insertIndex: Int, content: String) {
-        val textComponentItem = __textComponent!!.newTextComponent(currentInputMode)
+    override fun addTextComponent(insertIndex: Int, content: String) {
+        val textComponentItem = textComponentProvider!!.newTextComponent(currentInputMode)
         //prepare tag
         val textComponentModel = TextComponentModel()
         val componentTag = getNewComponentTag(insertIndex)
@@ -216,7 +214,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
         textComponentItem.tag = componentTag
         textComponentItem.setText(content)
         addView(textComponentItem, insertIndex)
-        __textComponent!!.updateComponent(textComponentItem)
+        textComponentProvider!!.updateComponent(textComponentItem)
         setFocus(textComponentItem)
         reComputeTagsAfter(insertIndex)
         refreshViewOrder()
@@ -243,35 +241,39 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
         val viewToBeRemoved = getChildAt(selfIndex)
         val previousView = getChildAt(selfIndex - 1)
         val content = (viewToBeRemoved as TextComponentItem).inputBox.text.toString()
-        if (previousView is HorizontalDividerComponentItem) {
-            //remove previous view.
-            removeViewAt(selfIndex - 1)
-            reComputeTagsAfter(selfIndex - 1)
-            //focus on latest text component
-            val lastTextComponent = getLatestTextComponentIndexBefore(selfIndex - 1)
-            setFocus(getChildAt(lastTextComponent))
-        } else if (previousView is TextComponentItem) {
-            removeViewAt(selfIndex)
-            val contentLen = previousView.inputBox.text.toString().length
-            previousView.inputBox.append(String.format("%s", content))
-            setFocus(previousView, contentLen)
-        } else if (previousView is ImageComponentItem) {
-            setActiveView(previousView)
-            previousView.setFocus()
+        when (previousView) {
+            is HorizontalDividerComponentItem -> {
+                //remove previous view.
+                removeViewAt(selfIndex - 1)
+                reComputeTagsAfter(selfIndex - 1)
+                //focus on latest text component
+                val lastTextComponent = getLatestTextComponentIndexBefore(selfIndex - 1)
+                setFocus(getChildAt(lastTextComponent))
+            }
+            is TextComponentItem -> {
+                removeViewAt(selfIndex)
+                val contentLen = previousView.inputBox.text.toString().length
+                previousView.inputBox.append(String.format("%s", content))
+                setFocus(previousView, contentLen)
+            }
+            is ImageComponentItem -> {
+                setActiveView(previousView)
+                previousView.setFocus()
+            }
         }
         reComputeTagsAfter(selfIndex)
         refreshViewOrder()
     }
 
     /**
-     * This method searches whithin view group for a TextComponent which was
+     * This method searches whithin view group for a TextComponentProvider which was
      * inserted prior to startIndex.
      *
      * @param starIndex index from which search starts.
      * @return index of LatestTextComponent before startIndex.
      */
     private fun getLatestTextComponentIndexBefore(starIndex: Int): Int {
-        var view: View? = null
+        var view: View?
         for (i in starIndex downTo 0) {
             view = getChildAt(i)
             if (view is TextComponentItem)
@@ -329,7 +331,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
             (_activeView as TextComponentItem).mode = currentInputMode
             val componentTag = _activeView!!.tag as ComponentTag
             (componentTag.baseComponent as TextComponentModel).headingStyle = BLOCKQUOTE
-            __textComponent!!.updateComponent(_activeView as TextComponentItem)
+            textComponentProvider!!.updateComponent(_activeView as TextComponentItem)
         }
         refreshViewOrder()
     }
@@ -344,7 +346,7 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
             (_activeView as TextComponentItem).mode = currentInputMode
             val componentTag = _activeView!!.tag as ComponentTag
             (componentTag.baseComponent as TextComponentModel).headingStyle = NORMAL
-            __textComponent!!.updateComponent(_activeView as TextComponentItem)
+            textComponentProvider!!.updateComponent(_activeView as TextComponentItem)
         }
         refreshViewOrder()
     }
@@ -357,9 +359,9 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
         currentInputMode = MODE_UL
         if (_activeView is TextComponentItem) {
             (_activeView as TextComponentItem).mode = currentInputMode
-            val componentTag = _activeView!!.getTag() as ComponentTag
+            val componentTag = _activeView!!.tag as ComponentTag
             (componentTag.baseComponent as TextComponentModel).headingStyle = NORMAL
-            __textComponent!!.updateComponent(_activeView as TextComponentItem)
+            textComponentProvider!!.updateComponent(_activeView as TextComponentItem)
         }
         refreshViewOrder()
     }
@@ -367,15 +369,15 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
     /**
      * This method gets the suitable insert index using
      * `checkInvalidateAndCalculateInsertIndex()` method.
-     * Prepares the ImageComponent and inserts it.
-     * Since the user might need to type further, it inserts new TextComponent below
+     * Prepares the ImageComponentProvider and inserts it.
+     * Since the user might need to type further, it inserts new TextComponentProvider below
      * it.
      *
      * @param filePath uri of image to be inserted.
      */
     fun insertImage(filePath: String) {
         var insertIndex = checkInvalidateAndCalculateInsertIndex()
-        val imageComponentItem = __imageComponent!!.getNewImageComponentItem(this)
+        val imageComponentItem = imageComponentProvider!!.getNewImageComponentItem(this)
         //prepare tag
         val imageComponentModel = ImageComponentModel()
         val imageComponentTag = getNewComponentTag(insertIndex)
@@ -427,13 +429,13 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
     /**
      * This method gets the suitable insert index using
      * `checkInvalidateAndCalculateInsertIndex()` method.
-     * Prepares the ImageComponent and inserts it.
+     * Prepares the ImageComponentProvider and inserts it.
      * loads already uploaded image and sets caption
      *
      * @param filePath uri of image to be inserted.
      */
-    fun insertImage(insertIndex: Int, filePath: String, uploaded: Boolean, caption: String) {
-        val imageComponentItem = __imageComponent!!.getNewImageComponentItem(this)
+    override fun insertImage(insertIndex: Int, filePath: String, uploaded: Boolean, caption: String) {
+        val imageComponentItem = imageComponentProvider!!.getNewImageComponentItem(this)
         //prepare tag
         val imageComponentModel = ImageComponentModel()
         val imageComponentTag = getNewComponentTag(insertIndex)
@@ -448,28 +450,18 @@ class Editor(context: Context, attrs: AttributeSet?) : Core(context, attrs),
      * Inserts new horizontal ruler.
      */
     fun insertHorizontalDivider() {
-        var insertIndex = nextIndex
-        val horizontalDividerComponentItem = __horizontalComponent!!.newHorizontalComponentItem
-        val _hrTag = getNewComponentTag(insertIndex)
-        horizontalDividerComponentItem.tag = _hrTag
-        addView(horizontalDividerComponentItem, insertIndex)
-        reComputeTagsAfter(insertIndex)
-        //add another text component below image
-        insertIndex++
-        currentInputMode = MODE_PLAIN
-        addTextComponent(insertIndex)
-        refreshViewOrder()
+        insertHorizontalDivider(true)
     }
 
     /**
      * Inserts new horizontal ruler.
      * Adds new text components based on passed parameter.
      */
-    fun insertHorizontalDivider(insertNewTextComponentAfterThis: Boolean) {
+    override fun insertHorizontalDivider(insertNewTextComponentAfterThis: Boolean) {
         var insertIndex = nextIndex
-        val horizontalDividerComponentItem = __horizontalComponent!!.newHorizontalComponentItem
-        val _hrTag = getNewComponentTag(insertIndex)
-        horizontalDividerComponentItem.tag = _hrTag
+        val horizontalDividerComponentItem = horizontalComponentProvider!!.newHorizontalComponentItem
+        val hrTag = getNewComponentTag(insertIndex)
+        horizontalDividerComponentItem.tag = hrTag
         addView(horizontalDividerComponentItem, insertIndex)
         reComputeTagsAfter(insertIndex)
         //add another text component below image

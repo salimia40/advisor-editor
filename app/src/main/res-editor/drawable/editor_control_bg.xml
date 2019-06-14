@@ -2,8 +2,10 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-
-    <solid android:color="@color/bg_editor_control" />
-    <stroke android:color="@color/border_editor_control" android:width="1dp"/>
+    <size
+        android:width="10dp"
+        android:height="10dp" />
+    <solid android:color="#ffffff" />
+    <stroke android:color="#c4c3c3" android:width="1dp"/>
 
 </shape>
